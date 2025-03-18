@@ -18,14 +18,68 @@ const switchForm=document.querySelector('#switchForm')
 document.body.addEventListener('click',(e)=>{
 
    if(e.target.id != "switchForm") return;
-    signIn = !signIn
+   switchAuthForm()
+ 
+});
+
+const authForm=document.querySelector('#authForm');
+authForm.addEventListener('submit',(e)=>{
+   e.preventDefault();
+   const user={
+      username: signIn ? undefined : userName.value,
+      email:email.value,
+      password:password.value
+   };
+
+   console.log(user)
+   if(signIn){
+
+      const allUsers=JSON.parse(localStorage.getItem('Users')) ||[];
+      const existingUser=allUsers.find(
+         (user)=>user.email=== email.value && user.email === email.value);
+         
+      if(existingUser){
+         localStorage.setItem("onlineUser",JSON.stringify(existingUser));
+         window.location.href='index.html'
+      }else{
+         alert("Invalid credentials")
+         return
+      }
+   }else{
+      const allUsers=JSON.parse(localStorage.getItem('Users')) ||[];
+
+      const existingUser=allUsers.find((user)=>user.username === userName.value && user.email === email.value);
+      if(existingUser){
+         alert(`User ${existingUser.username} Allready Exists`)
+         return
+      }
+      if(confirmPassword.value !== password.value){
+         alert("password mismatch")
+         return;
+      } 
+      allUsers.push(user);
+      localStorage.setItem('Users',JSON.stringify(allUsers))
+      alert('Registration Successfully');
+      switchAuthForm()
+   }
+
+
+  
+})
+ function switchAuthForm(){
+   signIn = !signIn
    if(signIn){
     authButton.textContent='Sign in'
     authSwitch.innerHTML=`New to survey <a href="#" id="switchForm">Sing up </a>`
     formTitle.textContent='Sing In';
     userName.style.display='none'
     confirmPassword.style.display='none'
-    console.log('click')
+    userName.value=''
+    email.value=''
+    password.value=''
+    confirmPassword.value=''
+
+   //  console.log('click')
 
    }else{
     authButton.textContent='Sign Up'
@@ -35,4 +89,4 @@ document.body.addEventListener('click',(e)=>{
     confirmPassword.style.display='block'
     console.log('click')
    }
-})
+ }
