@@ -40,7 +40,7 @@ authForm.addEventListener('submit',(e)=>{
          
       if(existingUser){
          localStorage.setItem("onlineUser",JSON.stringify(existingUser));
-         window.location.href='/ourweb/index.html'
+         window.location.href='ourweb/index.html'
       }else{
          alert("Invalid credentials")
          return
